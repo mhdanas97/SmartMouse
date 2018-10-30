@@ -1,6 +1,5 @@
 import random
 import queue
-import heapq
 
 
 class Node:
