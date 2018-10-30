@@ -3,16 +3,19 @@ import queue
 
 
 class Node:
-    def __init__(self, label, is_stairway):
-        self.is_stairway = is_stairway
-        self.visited = False
-        self.label = label
+    def __init__(self, label: str, is_stairway: bool, x: int, y: int, z: int):
+        self.is_stairway: bool = is_stairway
+        self.visited: bool = False
+        self.label: str = label
         self.children = set()
         self.has_cheese = False
-        self.prev = None
+        self.prev: Node = None
         self.weights = {}
+        self.x: int = x
+        self.y: int = y
+        self.z: int = z
 
-    def add_children(self, children, weight):
+    def add_children(self, children, weight: int):
         for child in children:
             if child not in self.children:
                 self.children.add(child)
@@ -36,15 +39,16 @@ class Graph:
             self.nodes[node.label] = node
 
     def add_cheese(self):
-        cheese_node = random.choice(list(self.nodes.values()))
-        cheese_node.has_cheese = True
+        cheese_node: Node = random.choice(list(self.nodes.values()))
+        cheese_node.has_cheese: bool = True
+        return cheese_node
         # print("Cheese at: " + str(cheese_node))
 
     def traverse_all_nodes_bfs(self, start_node):
         q = queue.Queue()
         q.put(start_node)
         while not q.empty():
-            node = q.get()
+            node: Node = q.get()
             if not node.visited:
                 node.visited = True
                 print(node)
@@ -100,10 +104,10 @@ class Graph:
         for node in self.nodes:
             self.nodes[node].visited = False
             self.nodes[node].has_cheese = False
-        self.add_cheese()
         print('\nCLEARED\n')
+        return self.add_cheese()
 
-    def find_cheese_ucs(self, start_node):
+    def find_cheese_ucs(self, start_node: Node, goal: Node):
         distance = dict()
         q = list(self.nodes.values())
         for child in q:
@@ -118,13 +122,19 @@ class Graph:
                 return True
             print(str(chosen_node))
             for child in chosen_node.children:
-                alt = distance[str(chosen_node)] + chosen_node.weights[str(child)]
+                alt = distance[str(chosen_node)] + chosen_node.weights[str(child)] + \
+                      manhattan_distance(chosen_node,
+                                         goal)
                 if alt < distance[str(child)]:
                     distance[str(child)] = alt
 
     def choose_min_distance(self, distance, q):
-        chosen_node = q[0]
+        chosen_node: Node = q[0]
         for i in range(1, len(q)):
             if distance[str(q[i])] < distance[str(chosen_node)]:
                 chosen_node = q[i]
         return chosen_node
+
+
+def manhattan_distance(node1: Node, node2: Node):
+    return abs(node1.x - node2.x) + abs(node1.y - node2.y) + abs(node1.z - node2.z)
