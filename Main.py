@@ -33,7 +33,7 @@ def initialize(g):
     # g.clear()
     # g.find_cheese_dfs(random.choice(list(g.nodes.values())))
     goal = g.clear()
-    g.find_cheese_ucs(random.choice(list(g.nodes.values())), goal)
+    g.find_cheese_a_star(random.choice(list(g.nodes.values())), goal)
 
 
 if __name__ == '__main__':

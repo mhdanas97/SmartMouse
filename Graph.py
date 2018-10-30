@@ -19,10 +19,11 @@ class Node:
         for child in children:
             if child not in self.children:
                 self.children.add(child)
-                if weight < 0:
-                    w = random.randint(1, 10)
-                else:
-                    w = weight
+                # if weight < 0:
+                #     w = random.randint(1, 10)
+                # else:
+                #     w = weight
+                w = random.randint(1, 10) if weight < 0 else weight
                 self.weights[str(child)] = w
                 child.add_children([self], w)
 
@@ -38,7 +39,7 @@ class Graph:
         for node in nodes:
             self.nodes[node.label] = node
 
-    def add_cheese(self):
+    def add_cheese(self) -> Node:
         cheese_node: Node = random.choice(list(self.nodes.values()))
         cheese_node.has_cheese: bool = True
         return cheese_node
@@ -100,20 +101,19 @@ class Graph:
                     q.put(child)
 
     def clear(self):
-
         for node in self.nodes:
             self.nodes[node].visited = False
             self.nodes[node].has_cheese = False
         print('\nCLEARED\n')
         return self.add_cheese()
 
-    def find_cheese_ucs(self, start_node: Node, goal: Node):
+    def find_cheese_a_star(self, start_node: Node, goal: Node):
         distance = dict()
         q = list(self.nodes.values())
         for child in q:
             distance[str(child)] = 100
         distance[str(start_node)] = 0
-        while True:
+        for _ in range(400):
             chosen_node = self.choose_min_distance(distance, q)
             q.remove(chosen_node)
             if chosen_node.has_cheese:
@@ -128,7 +128,7 @@ class Graph:
                 if alt < distance[str(child)]:
                     distance[str(child)] = alt
 
-    def choose_min_distance(self, distance, q):
+    def choose_min_distance(self, distance, q) -> Node:
         chosen_node: Node = q[0]
         for i in range(1, len(q)):
             if distance[str(q[i])] < distance[str(chosen_node)]:
@@ -136,5 +136,5 @@ class Graph:
         return chosen_node
 
 
-def manhattan_distance(node1: Node, node2: Node):
+def manhattan_distance(node1: Node, node2: Node) -> int:
     return abs(node1.x - node2.x) + abs(node1.y - node2.y) + abs(node1.z - node2.z)
