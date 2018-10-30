@@ -115,6 +115,7 @@ class Graph:
             q.remove(chosen_node)
             if chosen_node.has_cheese:
                 print('Found cheese at ' + str(chosen_node))
+                print('Total cost: ' + str(distance[str(chosen_node)]))
                 return True
             print(str(chosen_node))
             for child in chosen_node.children:
