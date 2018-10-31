@@ -122,9 +122,10 @@ class Graph:
                 return True
             print(str(chosen_node))
             for child in chosen_node.children:
-                alt = distance[str(chosen_node)] + chosen_node.weights[str(child)] + \
-                      manhattan_distance(chosen_node,
-                                         goal)
+                alt = (distance[str(chosen_node)]
+                       + chosen_node.weights[str(child)]
+                       + manhattan_distance(chosen_node,
+                                            goal))
                 if alt < distance[str(child)]:
                     distance[str(child)] = alt
 
